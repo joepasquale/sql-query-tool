@@ -1,0 +1,126 @@
+{% extends "public/templates/public_template.html" %}
+
+{% block title %}Paradox Query Tool{% endblock %}
+
+{% block main %}
+<!-- Header -->
+<div class="container tool-container">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center">SQL Query Tool for Paradox</h1>
+            <p class="text-center">Note: this tool will not allow you to insert, update, or make deletions on the
+                database. It is read-only access.</p>
+        </div>
+    </div>
+    <!-- Submit SQL Query -->
+    <div class="row query-tool">
+        <div class="col">
+            <h3 class="text-center">Write SQL Query Below</h3>
+            <form action="/query/load-sql-query" method='POST'>
+                <div class="form-group">
+                    <label>SQL Query</label>
+                    <input class='form-control' type='text' name='sql-query' placeholder="Ex: SELECT * FROM FACILITY">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary text-center">Submit Query</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Query Builder -->
+    <div class="row query-tool">
+        <div class="col">
+            <h3 class="text-center">Build Query Below</h3>
+            <form action="/query/load-tool-query" method='POST'>
+                <div class="form-group">
+                    <div>
+                        <label>Select Source Table</label>
+                        <select class='form-control' name='table-select'>
+                            {{ tableListString|safe}}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Select Attribute(s)</label>
+                        <div class="row">
+                            <div class="col">
+                                <select class='form-control' name='attr1-select'>
+                                    <option value="*">ALL RECORDS</option>
+                                    <option value="attr1-t1">Attribute 1</option>
+                                    <option value="attr2-t1">Attribute 2</option>
+                                    <option value="attr3-t1">Attribute 3</option>
+                                    <option value="attr4-t1">Attribute 4</option>
+                                    <option value="attr5-t1">Attribute 5</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select class='form-control' name='attr1-comparator'>
+                                    <option value="gt-t1">></option>
+                                    <option value="lt-t1"><</option>
+                                    <option value="eq-t1">=</option>
+                                    <option value="geq-t1">>=</option>
+                                    <option value="leq-t1"><=</option>
+                                    <option value="in-t1">IN</option>
+                                    <option value="like-t1">LIKE</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input class='form-control' type='text' name='t1-val' placeholder="Value">
+                            </div>
+                        </div>
+                        <div class="text-center form-control" style="margin-top:5px;margin-bottom:5px;">
+                            <label for="and">AND</label>
+                            <input type="radio" id="and" name="and-or" value="AND">
+                            <label for="or">OR</label>
+                            <input type="radio" id="or" name="and-or" value="OR">
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <select class='form-control' name='attr2-select'>
+                                    <option value="*">ALL RECORDS</option>
+                                    <option value="attr1-t2">Attribute 1</option>
+                                    <option value="attr2-t2">Attribute 2</option>
+                                    <option value="attr3-t2">Attribute 3</option>
+                                    <option value="attr4-t2">Attribute 4</option>
+                                    <option value="attr5-t2">Attribute 5</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select class='form-control' name='attr2-comparator'>
+                                    <option value="gt-t2">></option>
+                                    <option value="lt-t2"><</option>
+                                    <option value="eq-t2">=</option>
+                                    <option value="geq-t2">>=</option>
+                                    <option value="leq-t2"><=</option>
+                                    <option value="in-t2">IN</option>
+                                    <option value="like-t2">LIKE</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input class='form-control' type='text' name='t2-val' placeholder="Value">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary center">Submit Query</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Output -->
+<div class="container-lg tool-container">
+    <div class="query-output col center text-center">
+        <div class="center text-center">
+            <h3 class="text-center">Output</h3>
+        </div>
+        <table class="table table-striped table-dark query-output container">
+            {{ result|safe }}
+        </table>
+        <div class="row text-center">
+            <a class="text-center" href="/query/download-csv" target="__blank" style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to CSV</button></a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
