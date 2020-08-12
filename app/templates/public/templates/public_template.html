@@ -20,10 +20,8 @@
   <main>
     <!-- Header -->
     <div class="container">
-      <div class="row text-center">
-        <img class="img-fluid" alt="tech-etch-logo" src="{{ url_for('static', filename = 'img/TE-Logo.jpg') }}"></img>
-        <a href="/"><button class="btn btn-primary">Home</button></a>
-        <a href='{{ url_for("query") }}'><button class="btn btn-primary">Query</button></a>
+      <div class="row center text-center" style="margin-top: 20px;">
+        <a href="/" class="text-center"><button class="text-center btn btn-primary">RESET</button></a>
       </div>
     </div>
     {% block main %}{% endblock %}

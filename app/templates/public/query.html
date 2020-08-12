@@ -41,32 +41,37 @@
                             {{ tableListString|safe}}
                         </select>
                     </div>
+                    <div id="viewSelector">
+                        <label>Choose columns to view</label>
+                        <div class="col">
+                            <select class='form-control' name='view-select' id='view-select'>
+                            </select>
+                        </div>
+                    </div>
                     <div id="colSelector">
-                        <label>Select Attribute(s)</label>
+                        <label>Add constraint</label>
                         <div class="row" id="attrContainer1">
                             <!-- Column Selector -->
                             <div class="col">
-                                <select class='form-control' name='attr1-select' id='attr1-select'>
-                                    <option value="*">ALL RECORDS</option>
-                                    <option value="TOP (100) *">TOP 100 RECORDS</option>
+                                <select class='form-control attr-select' name='attr1-select' id='attr1-select'>
                                 </select>
                             </div>
                             <!-- Comparator -->
                             <div class="col">
-                                <select class='form-control' name='attr1-comparator'>
-                                    <option value="none"></option>
-                                    <option value="gt-t1">></option>
-                                    <option value="lt-t1"><</option>
-                                    <option value="eq-t1">=</option>
-                                    <option value="geq-t1">>=</option>
-                                    <option value="leq-t1"><=</option>
-                                    <option value="in-t1">IN</option>
-                                    <option value="like-t1">LIKE</option>
+                                <select class='form-control' name='attr1-comparator' id='attr1-comparator'>
+                                    <option value=""></option>
+                                    <option value=">">></option>
+                                    <option value="<"><</option>
+                                    <option value="=">=</option>
+                                    <option value=">=">>=</option>
+                                    <option value="=<"><=</option>
+                                    <option value="IN">IN</option>
+                                    <option value="LIKE">LIKE</option>
                                 </select>
                             </div>
                             <!-- Value for comparison -->
                             <div class="col">
-                                <input class='form-control' type='text' name='t1-val' placeholder="Value">
+                                <input class='form-control' type='text' name='t1-val' id='t1-val' placeholder="Value">
                             </div>
                         </div>
                         <!-- And/Or selector -->

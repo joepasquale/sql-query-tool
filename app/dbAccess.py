@@ -8,6 +8,7 @@ conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                       'DATABASE=*;'
                       'uid=*;'
                       'pwd=*;')
+
 curData = []
 curTable = ""
 curColumns = []
