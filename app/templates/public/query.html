@@ -22,7 +22,7 @@
                     <input class='form-control' type='text' name='sql-query' placeholder="Ex: SELECT * FROM FACILITY">
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary text-center">Submit Query</button>
+                    <button type="submit" class="btn btn-primary text-center submitQuery">Submit Query</button>
                 </div>
             </form>
         </div>
@@ -32,28 +32,29 @@
         <div class="col">
             <h3 class="text-center">Build Query Below</h3>
             <form action="/query/load-tool-query" method='POST'>
-                <div class="form-group">
+                <div class="form-group" id="vtool">
                     <div>
                         <label>Select Source Table</label>
-                        <select class='form-control' name='table-select'>
+                        <select class='form-control' id="table-select" name='table-select'>
                             {{ tableListString|safe}}
                         </select>
+                        <button type="button" class="btn btn-primary fetchColumns">Fetch Current Table Columns</button>
                     </div>
-                    <div>
+                    <div style="margin-top: 10px;margin-bottom:15px;">
+                    </div>
+                    <div id="colSelector">
                         <label>Select Attribute(s)</label>
-                        <div class="row">
+                        <div class="row" id="attrContainer1">
                             <div class="col">
                                 <select class='form-control' name='attr1-select'>
                                     <option value="*">ALL RECORDS</option>
-                                    <option value="attr1-t1">Attribute 1</option>
-                                    <option value="attr2-t1">Attribute 2</option>
-                                    <option value="attr3-t1">Attribute 3</option>
-                                    <option value="attr4-t1">Attribute 4</option>
-                                    <option value="attr5-t1">Attribute 5</option>
+                                    <option value="TOP (100) *">TOP 100 RECORDS</option>
+                                    {{ columnListString|safe }}
                                 </select>
                             </div>
                             <div class="col">
                                 <select class='form-control' name='attr1-comparator'>
+                                    <option value="none"></option>
                                     <option value="gt-t1">></option>
                                     <option value="lt-t1"><</option>
                                     <option value="eq-t1">=</option>
@@ -67,42 +68,27 @@
                                 <input class='form-control' type='text' name='t1-val' placeholder="Value">
                             </div>
                         </div>
-                        <div class="text-center form-control" style="margin-top:5px;margin-bottom:5px;">
-                            <label for="and">AND</label>
-                            <input type="radio" id="and" name="and-or" value="AND">
+                        <br>
+                        <div class="text-center form-control" id="radio1" style="width:50%;margin-left:auto;margin-right:auto;margin-top:5px;margin-bottom:5px;">
+                            <label for="and1">AND</label>
+                            <input type="radio" id="and1" name="and-or" value="AND">
                             <label for="or">OR</label>
-                            <input type="radio" id="or" name="and-or" value="OR">
+                            <input type="radio" id="or1" name="and-or" value="OR">
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <select class='form-control' name='attr2-select'>
-                                    <option value="*">ALL RECORDS</option>
-                                    <option value="attr1-t2">Attribute 1</option>
-                                    <option value="attr2-t2">Attribute 2</option>
-                                    <option value="attr3-t2">Attribute 3</option>
-                                    <option value="attr4-t2">Attribute 4</option>
-                                    <option value="attr5-t2">Attribute 5</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <select class='form-control' name='attr2-comparator'>
-                                    <option value="gt-t2">></option>
-                                    <option value="lt-t2"><</option>
-                                    <option value="eq-t2">=</option>
-                                    <option value="geq-t2">>=</option>
-                                    <option value="leq-t2"><=</option>
-                                    <option value="in-t2">IN</option>
-                                    <option value="like-t2">LIKE</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <input class='form-control' type='text' name='t2-val' placeholder="Value">
-                            </div>
+                        <br>
+                        <div id="extraAttributes" style="margin-bottom:5px;">
+                            <label class="text-center">Add additional constraint(s)</label>
+                            <br>
+                            <button type="button" class="btn btn-primary addService">+</button>
+                            <button type="button" class="btn btn-primary removeService">-</button>
+                            <br>
                         </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary center">Submit Query</button>
+
+                    <div class="text-center">
+                        <br>
+                        <button type="submit" class="btn btn-primary center submitQuery">Submit Query</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -112,15 +98,23 @@
 <div class="container-lg tool-container">
     <div class="query-output col center text-center">
         <div class="center text-center">
-            <h3 class="text-center">Output</h3>
+            <h4 class="text-center">Output</h4>
+            <h2 class="text-center">{{ curTable }}</h2>
         </div>
         <table class="table table-striped table-dark query-output container">
             {{ result|safe }}
         </table>
         <div class="row text-center">
-            <a class="text-center" href="/query/download-csv" target="__blank" style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to CSV</button></a>
+            <a class="text-center" href="/query/download-csv" target="__blank"
+                style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to
+                    CSV</button></a>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+  <!-- App.js script -->
+  <script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
 {% endblock %}
