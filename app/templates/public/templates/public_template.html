@@ -23,7 +23,7 @@
       <div class="row text-center">
         <img class="img-fluid" alt="tech-etch-logo" src="{{ url_for('static', filename = 'img/TE-Logo.jpg') }}"></img>
         <a href="/"><button class="btn btn-primary">Home</button></a>
-        <a href="/query"><button class="btn btn-primary">Query</button></a>
+        <a href='{{ url_for("query") }}'><button class="btn btn-primary">Query</button></a>
       </div>
     </div>
     {% block main %}{% endblock %}
@@ -50,9 +50,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-    <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    </head>
 
   {% block scripts %}{% endblock %}
 </body>

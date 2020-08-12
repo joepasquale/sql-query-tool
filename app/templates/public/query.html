@@ -4,10 +4,11 @@
 
 {% block main %}
 <!-- Header -->
+{% autoescape false %}
 <div class="container tool-container">
     <div class="row">
         <div class="col">
-            <h1 class="text-center">SQL Query Tool for Paradox</h1>
+            <h1 class="text-center">SQL Query Tool</h1>
             <p class="text-center">Note: this tool will not allow you to insert, update, or make deletions on the
                 database. It is read-only access.</p>
         </div>
@@ -16,13 +17,13 @@
     <div class="row query-tool">
         <div class="col">
             <h3 class="text-center">Write SQL Query Below</h3>
-            <form action="/query/load-sql-query" method='POST'>
+            <form method='POST'>
                 <div class="form-group">
                     <label>SQL Query</label>
-                    <input class='form-control' type='text' name='sql-query' placeholder="Ex: SELECT * FROM FACILITY">
+                    <input class='form-control' type='text' id='sql-query' name='sql-query' placeholder="Ex: SELECT * FROM FACILITY">
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary text-center submitQuery">Submit Query</button>
+                    <button type="button" class="btn btn-primary text-center submitQuerySQL">Submit Query</button>
                 </div>
             </form>
         </div>
@@ -31,27 +32,26 @@
     <div class="row query-tool">
         <div class="col">
             <h3 class="text-center">Build Query Below</h3>
-            <form action="/query/load-tool-query" method='POST'>
+            <form method='POST'>
                 <div class="form-group" id="vtool">
+                    <!-- Table Selector -->
                     <div>
                         <label>Select Source Table</label>
-                        <select class='form-control' id="table-select" name='table-select'>
+                        <select class='form-control fetchColumns' id="table-select" name='table-select'>
                             {{ tableListString|safe}}
                         </select>
-                        <button type="button" class="btn btn-primary fetchColumns">Fetch Current Table Columns</button>
-                    </div>
-                    <div style="margin-top: 10px;margin-bottom:15px;">
                     </div>
                     <div id="colSelector">
                         <label>Select Attribute(s)</label>
                         <div class="row" id="attrContainer1">
+                            <!-- Column Selector -->
                             <div class="col">
-                                <select class='form-control' name='attr1-select'>
+                                <select class='form-control' name='attr1-select' id='attr1-select'>
                                     <option value="*">ALL RECORDS</option>
                                     <option value="TOP (100) *">TOP 100 RECORDS</option>
-                                    {{ columnListString|safe }}
                                 </select>
                             </div>
+                            <!-- Comparator -->
                             <div class="col">
                                 <select class='form-control' name='attr1-comparator'>
                                     <option value="none"></option>
@@ -64,10 +64,12 @@
                                     <option value="like-t1">LIKE</option>
                                 </select>
                             </div>
+                            <!-- Value for comparison -->
                             <div class="col">
                                 <input class='form-control' type='text' name='t1-val' placeholder="Value">
                             </div>
                         </div>
+                        <!-- And/Or selector -->
                         <br>
                         <div class="text-center form-control" id="radio1" style="width:50%;margin-left:auto;margin-right:auto;margin-top:5px;margin-bottom:5px;">
                             <label for="and1">AND</label>
@@ -76,18 +78,25 @@
                             <input type="radio" id="or1" name="and-or" value="OR">
                         </div>
                         <br>
+                        <!-- Add additional attribute filter -->
                         <div id="extraAttributes" style="margin-bottom:5px;">
                             <label class="text-center">Add additional constraint(s)</label>
                             <br>
-                            <button type="button" class="btn btn-primary addService">+</button>
+                            <button type="button" class="btn btn-primary addService fetchColumns">+</button>
                             <button type="button" class="btn btn-primary removeService">-</button>
                             <br>
                         </div>
                     </div>
+                    <!-- Sort selector -->
+                    <div>
+                        <label class="text-center">Sort By:</label>
+                        <select class='form-control attr-select' id='sort-select' name='sort-select'>
 
+                        </select>
+                    </div>
                     <div class="text-center">
                         <br>
-                        <button type="submit" class="btn btn-primary center submitQuery">Submit Query</button>
+                        <button type="button" class="btn btn-primary center submitQueryVisual">Submit Query</button>
                     </div>
                 </div>
             </form>
@@ -101,8 +110,8 @@
             <h4 class="text-center">Output</h4>
             <h2 class="text-center">{{ curTable }}</h2>
         </div>
-        <table class="table table-striped table-dark query-output container">
-            {{ result|safe }}
+        <table id = "outputTbl" class="table table-striped table-dark query-output container">
+            {{ resultString|safe }}
         </table>
         <div class="row text-center">
             <a class="text-center" href="/query/download-csv" target="__blank"
@@ -111,7 +120,7 @@
         </div>
     </div>
 </div>
-
+{% endautoescape %}
 {% endblock %}
 
 {% block scripts %}

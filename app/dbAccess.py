@@ -1,7 +1,6 @@
 from app import app
 from flask import json, make_response
-import pyodbc
-import csv
+import pyodbc, csv
 from io import StringIO
 
 conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
@@ -13,13 +12,26 @@ curData = []
 curTable = ""
 curColumns = []
 
+
+def truncateQuery(query):
+    global curTable
+    curTable = query
+    tableEndInd = query.index(' FROM')
+    curTable = curTable[tableEndInd + 6:]
+    try:
+        curTable = curTable[:curTable.index(' WHERE')]
+    except:
+        print("No conditions specified")
+    
+    return curTable
+
 #used to load list of tables from current db for visual query tool
 #param: none
 #returns: a json object with a string containing the html code for every table's name, where each name is in an <option> tag
 def loadTableList():
     #create db query object
+    print("Received table list load request")
     db = conn.cursor()
-    #load table list
     sqlLoadTableList = "SELECT Distinct TABLE_NAME FROM information_schema.TABLES"
     db.execute(sqlLoadTableList)
     val = db.fetchall()
@@ -29,6 +41,7 @@ def loadTableList():
     for x in tableList:
         tableListString = tableListString + "<option value='" + x + "'>" + x + "</option>"
     db.close()
+    print("Sending response with tables")
     return json.dumps(tableListString)
 
 #used to fetch a list of columns for the currently selected table in the visual query tool
@@ -36,7 +49,8 @@ def loadTableList():
 #returns: a json object with a string containing the html code for every column's name, where each column is in an <option> tag
 def loadColumnList(table):
     db=conn.cursor()
-    sqlLoadColumnList = "SELECT * FROM " + str(table)
+    print("Received column load request")
+    sqlLoadColumnList = "SELECT * FROM [" + str(table) + "]"
     db.execute(sqlLoadColumnList)
     columnList = [str(column[0]) for column in db.description]
     #put table list into html for dropdown menu
@@ -44,6 +58,7 @@ def loadColumnList(table):
     for x in columnList:
         columnListString = columnListString + "<option value='" + x + "'>" + x + "</option>"
     db.close()
+    print("Sending response with columns")
     return json.dumps(columnListString)
 
     
@@ -52,9 +67,7 @@ def loadColumnList(table):
 #returns: a string with the html code for a table holding the results
 def buildResultTableHTML(query):
     global curData, curColumns
-    #read-only privileges
-    if "SELECT" not in query:
-        return "<tr>Invalid Query - Read Only</tr>"
+    print("Received request to build result table")
     #db cursor tool
     db = conn.cursor()
     try:
@@ -79,15 +92,17 @@ def buildResultTableHTML(query):
             result = result + "</tr>"
 
     except:
-        result = "<tr>Query failed</tr>"
+        result = "<tr><td>Query failed</tr></tr>"
 
     db.close()
+    print("Sending response with query result")
     return json.dumps(result)
 
 #a function to export the currently viewed table to a csv file
 #params: none explicitly, but it needs to be used after searching a table, or else the file will be empty
 #returns: a flask response containing the csv table
 def exportCSV():
+    print("Request received to export CSV of results")
     si = StringIO()
     cw = csv.writer(si)
     cw.writerow(curColumns)
@@ -95,4 +110,5 @@ def exportCSV():
     output = make_response(si.getvalue())
     output.headers["Content-Disposition"] = "attachment; filename=export.csv"
     output.headers["Content-type"] = "text/csv"
+    print("Sending response with CSV export")
     return output
