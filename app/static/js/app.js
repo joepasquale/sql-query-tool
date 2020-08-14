@@ -5,7 +5,8 @@ var x = 1;
 $(document).on('click', '.addService', function () {
     //when adding attribute field, increment counter
     x++;
-    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-right:auto;margin-bottom:10px;"><br><div class="col" ><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"><option value="*">ALL RECORDS</option><option value="TOP (100) *">TOP 100 RECORDS</option></option></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="IN">IN</option><option value="LIKE">LIKE</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div><br><div class="form-control col" id="radio' + x + '"><label for="and' + x + '">AND</label><input type="radio" id="and' + x + '"name="and-or" value="AND"><label for="or">OR</label><input type="radio" id="or' + x + '" name="and-or" value="OR"><br></div></div>';
+    //new attribute field contains and/or radio, col selector, comparator, and value fields
+    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-bottom:10px;"><div class="col" id="radio' + (x - 1) + '"><select class="form-control" id="ANDOR' + (x - 1) + '"><option value=""></option><option value="AND">AND</option><option value="OR">OR</option></select></div><div class="col"><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="IN">IN</option><option value="LIKE">LIKE</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div>';
     $(this).parent().append(html);
     console.log("added attribute field");
 });
@@ -77,13 +78,53 @@ $(document).on('click', '.submitQueryVisual', function () {
     //build half of query without qualifiers
     var query = "SELECT " + String(view1) + " FROM [" + String(table) + "]";
     //fetch values of qualifiers
-    //maybe contain this in a for loop from 1 to x?
-    var compCol = $("select#attr1-select option:checked").val();
-    var comparator = $("select#attr1-comparator option:checked").val();
-    var compVal = $("input#t1-val").val();
-    //to-do: add radio
-    if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
-        query = query + " WHERE " + String(compCol) + String(comparator) + String(compVal);
+    //execute if there are multiple qualifiers
+    if (x > 1) {
+        query = query + " WHERE ";
+        //for however many fields there are, iterate through fields, fetch values, and add to query string
+        for (var i = 0; i <= x; i++) {
+            //column field id
+            var colString = "select#attr" + (i) + "-select option:checked";
+            //comparator field id
+            var compString = "select#attr" + (i) + "-comparator option:checked";
+            //value field id
+            var valString = "input#t" + (i) + "-val";
+            //and/or field id 
+            var radioString = "select#ANDOR" + (i);
+            //selected col
+            var compCol = $(colString).val();
+            //selected comparator
+            var comparator = $(compString).val();
+            //entered value
+            var compVal = $(valString).val();
+            //and/or selected? (if i == x, then this will be null)
+            var radioVal = $(radioString).val();
+            //checks to make sure that all fields are filled out before adding the string
+            if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
+                //if there are more attribute fields, append the AND/OR statement
+                if (i != x) {
+                    query = query + String(compCol) + String(comparator) + String(compVal) + " " + String(radioVal) + " ";
+                } 
+                //otherwise (if you're at the last attribute field) don't append AND/OR
+                else {
+                    query = query + String(compCol) + String(comparator) + String(compVal) + " ";
+                }
+            }
+        }
+    }
+    //execute if there are no extra fields
+    else {
+        //same logic as above
+        var colString = "select#attr1-select option:checked";
+        if ($(colString).val() != "") {
+            query = query + " WHERE ";
+            var compCol = $(colString).val();
+            var comparator = $("select#attr1-comparator option:checked").val();
+            var compVal = $("input#t1-val").val();
+            if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
+                query = query + String(compCol) + String(comparator) + String(compVal);
+            }
+        }
     }
     //check if sorting preference is set
     var sorter = $("select#sort-select option:checked").val();
@@ -92,6 +133,7 @@ $(document).on('click', '.submitQueryVisual', function () {
     }
     console.log("Sending query selection: " + query.toString());
     $(function () {
+        $("#outputTbl").text("Awauting query selection: " + query.toString());
         //post to /query/result to get table string
         $.post('/query/result', { 'query': query },
             function (data) {
