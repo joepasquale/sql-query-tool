@@ -6,7 +6,7 @@ $(document).on('click', '.addService', function () {
     //when adding attribute field, increment counter
     x++;
     //new attribute field contains and/or radio, col selector, comparator, and value fields
-    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-bottom:10px;"><div class="col" id="radio' + (x - 1) + '"><select class="form-control" id="ANDOR' + (x - 1) + '"><option value=""></option><option value="AND">AND</option><option value="OR">OR</option></select></div><div class="col"><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="IN">IN</option><option value="LIKE">LIKE</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div>';
+    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-bottom:10px;"><div class="col" id="radio' + (x - 1) + '"><select class="form-control" id="ANDOR' + (x - 1) + '"><option value=""></option><option value="AND">AND</option><option value="OR">OR</option></select></div><div class="col"><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="CONTAINS">CONTAINS</option><option value="LIKE">LIKE</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div>';
     $(this).parent().append(html);
     console.log("added attribute field");
 });
@@ -103,11 +103,11 @@ $(document).on('click', '.submitQueryVisual', function () {
             if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
                 //if there are more attribute fields, append the AND/OR statement
                 if (i != x) {
-                    query = query + String(compCol) + String(comparator) + String(compVal) + " " + String(radioVal) + " ";
+                    query = query + String(compCol) + " " + String(comparator) + " " + String(compVal) + " " + String(radioVal) + " ";
                 } 
                 //otherwise (if you're at the last attribute field) don't append AND/OR
                 else {
-                    query = query + String(compCol) + String(comparator) + String(compVal) + " ";
+                    query = query + String(compCol) + " " + String(comparator) + " " + String(compVal) + " ";
                 }
             }
         }
@@ -122,7 +122,7 @@ $(document).on('click', '.submitQueryVisual', function () {
             var comparator = $("select#attr1-comparator option:checked").val();
             var compVal = $("input#t1-val").val();
             if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
-                query = query + String(compCol) + String(comparator) + String(compVal);
+                query = query + String(compCol) + " " + String(comparator) + " " + String(compVal);
             }
         }
     }

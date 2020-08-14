@@ -6,6 +6,10 @@ curTable = ""
 curColumns = []
 tables = json.loads(dbAccess.loadTableList())
 
+#todo - move index to /query page, and make "index page" a database select page
+@app.route('/dbSelect')
+def dbSelect():
+    print("unfinished")
 #index
 @app.route('/')
 def query():
