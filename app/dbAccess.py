@@ -1,6 +1,7 @@
 from app import app
 from flask import json, make_response
-import pyodbc, csv
+import pyodbc
+import csv
 from io import StringIO
 
 conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
@@ -13,6 +14,33 @@ curData = []
 curTable = ""
 curColumns = []
 
+#get list of dbs for db page
+def loadDBList():
+    #create db query object
+    print("Received DB list load request")
+    db = conn.cursor()
+    sqlLoadDBList = "SELECT name FROM master.sys.databases"
+    db.execute(sqlLoadDBList)
+    val = db.fetchall()
+    dbList = [x[0] for x in val]
+    #put table list into html for dropdown menu
+    dbListString = ""
+    for x in dbList:
+        dbListString = dbListString + "<option value='" + x + "'>" + x + "</option>"
+    db.close()
+    print("Sending response with DBs")
+    return json.dumps(dbListString)
+
+#change db for query tool
+def newDB(dbName):
+    global conn
+    conn.close()
+    conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
+                          'SERVER=*;'
+                          'DATABASE=' + str(dbName) + ';'
+                          'uid=*;'
+                          'pwd=*;')
+            
 
 def truncateQuery(query):
     global curTable
@@ -23,12 +51,14 @@ def truncateQuery(query):
         curTable = curTable[:curTable.index(' WHERE')]
     except:
         print("No conditions specified")
-    
+
     return curTable
 
 #used to load list of tables from current db for visual query tool
 #param: none
 #returns: a json object with a string containing the html code for every table's name, where each name is in an <option> tag
+
+
 def loadTableList():
     #create db query object
     print("Received table list load request")
@@ -48,8 +78,10 @@ def loadTableList():
 #used to fetch a list of columns for the currently selected table in the visual query tool
 #param: a table
 #returns: a json object with a string containing the html code for every column's name, where each column is in an <option> tag
+
+
 def loadColumnList(table):
-    db=conn.cursor()
+    db = conn.cursor()
     print("Received column load request")
     sqlLoadColumnList = "SELECT * FROM [" + str(table) + "]"
     db.execute(sqlLoadColumnList)
@@ -57,12 +89,13 @@ def loadColumnList(table):
     #put table list into html for dropdown menu
     columnListString = ""
     for x in columnList:
-        columnListString = columnListString + "<option value='" + x + "'>" + x + "</option>"
+        columnListString = columnListString + \
+            "<option value='" + x + "'>" + x + "</option>"
     db.close()
     print("Sending response with columns")
     return json.dumps(columnListString)
 
-    
+
 #create html for jinja based on query results
 #param: db, an object holding the result of a query
 #returns: a string with the html code for a table holding the results
@@ -102,6 +135,8 @@ def buildResultTableHTML(query):
 #a function to export the currently viewed table to a csv file
 #params: none explicitly, but it needs to be used after searching a table, or else the file will be empty
 #returns: a flask response containing the csv table
+
+
 def exportCSV():
     print("Request received to export CSV of results")
     si = StringIO()

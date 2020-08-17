@@ -5,13 +5,24 @@ curData = []
 curTable = ""
 curColumns = []
 tables = json.loads(dbAccess.loadTableList())
+dbList = json.loads(dbAccess.loadDBList())
 
-#todo - move index to /query page, and make "index page" a database select page
-@app.route('/dbSelect')
-def dbSelect():
-    print("unfinished")
-#index
+#landing page
 @app.route('/')
+def dbSelect():
+    return render_template("public/dbSelect.html", dbListString=dbList)
+
+#
+@app.route('/loadDB', methods=["POST"])
+def loadDb():
+    global tables
+    database = request.form["dbSelect"]
+    dbAccess.newDB(database)
+    tables = json.loads(dbAccess.loadTableList())
+    return redirect(url_for('query'), tables)
+
+#index
+@app.route('/query')
 def query():
     return render_template("public/query.html", tableListString=tables)
 

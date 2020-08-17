@@ -6,7 +6,7 @@ $(document).on('click', '.addService', function () {
     //when adding attribute field, increment counter
     x++;
     //new attribute field contains and/or radio, col selector, comparator, and value fields
-    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-bottom:10px;"><div class="col" id="radio' + (x - 1) + '"><select class="form-control" id="ANDOR' + (x - 1) + '"><option value=""></option><option value="AND">AND</option><option value="OR">OR</option></select></div><div class="col"><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="CONTAINS">CONTAINS</option><option value="LIKE">LIKE</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div>';
+    var html = '<div class="row" id="attrContainer' + x + '" style="margin-top:10px;margin-bottom:10px;"><div class="col" id="radio' + (x - 1) + '"><select class="form-control" id="ANDOR' + (x - 1) + '"><option value=""></option><option value="AND">AND</option><option value="OR">OR</option></select></div><div class="col"><select class="attr-select form-control" name="attr' + x + '-select" id="attr' + x + '-select"></select></div><div class="col"><select class="form-control" name="attr' + x + '-comparator" id="attr' + x + '-comparator"><option value=""></option><option value=">">></option><option value="<"><</option><option value="=">=</option><option value=">=">>=</option><option value="=<"><=</option><option value="NOT">NOT</option><option value="LIKE">LIKE</option><option value="SOME">SOME</option></select></div><div class="col"><input class="form-control" type="text" name="t' + x + '-val" id="t' + x + '-val" placeholder="Value"></div>';
     $(this).parent().append(html);
     console.log("added attribute field");
 });
@@ -133,7 +133,7 @@ $(document).on('click', '.submitQueryVisual', function () {
     }
     console.log("Sending query selection: " + query.toString());
     $(function () {
-        $("#outputTbl").text("Awauting query selection: " + query.toString());
+        $("#outputTbl").text("Awaiting query selection: " + query.toString() + " ...");
         //post to /query/result to get table string
         $.post('/query/result', { 'query': query },
             function (data) {

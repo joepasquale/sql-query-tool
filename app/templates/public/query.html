@@ -63,8 +63,9 @@
                                     <option value="=">=</option>
                                     <option value=">=">>=</option>
                                     <option value="=<"><=</option>
-                                    <option value="CONTAINS">CONTAINS</option>
+                                    <option value="NOT">NOT</option>
                                     <option value="LIKE">LIKE</option>
+                                    <option value="SOME">SOME</option>
                                 </select>
                             </div>
                             <!-- Value for comparison -->
@@ -105,14 +106,14 @@
             <h4 class="text-center">Output</h4>
             <h2 class="text-center">{{ curTable }}</h2>
         </div>
-        <table id = "outputTbl" class="table table-striped table-dark query-output container">
-            {{ resultString|safe }}
-        </table>
         <div class="row text-center">
             <a class="text-center" href="/query/download-csv" target="__blank"
                 style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to
                     CSV</button></a>
         </div>
+        <table id = "outputTbl" class="table table-striped table-dark query-output container">
+            {{ resultString|safe }}
+        </table>
     </div>
 </div>
 {% endautoescape %}
