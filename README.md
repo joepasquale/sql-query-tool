@@ -11,8 +11,6 @@ If you continue getting errors at this point, you may have put in an invalid ser
 ## Known Issues
 This doesn't really work without a lot of poking and prodding on Mac, thanks to the pyodbc module which is responsible for making all the SQL queries; Macs don't typically come with the correct ODBC drivers to connect to the database. However, the author of the pyodbc module wrote [these instructions](https://github.com/mkleehammer/pyodbc/wiki/Connecting-to-SQL-Server-from-Mac-OSX) for anyone who would like to configure their machine with the correct Windows ODBC drivers.
 
-If the table is too big, it pops off the page. In the meantime, exporting a file to a csv will let you see the resulting data in its entirety.
-
 ## Intended Use
 This is a web application that is designed to allow users who are not familiar with SQL to make queries of a database. If you plan on utilizing this application for many people to use at once, it's important to make sure that users all have logins to the targeted SQL server, as too many people trying to access queries at once may create issues if they are all coming from one account. If you plan on using this program on your local to access a server on your network, your biggest bottleneck will likely be how quickly your server can execute queries.
 
