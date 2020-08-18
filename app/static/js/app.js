@@ -99,11 +99,11 @@ $(document).on('click', '.submitQueryVisual', function () {
             if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
                 //if there are more attribute fields, append the AND/OR statement
                 if (i != x) {
-                    query = query + String(compCol) + " " + String(comparator) + " " + String(compVal) + " " + String(radioVal) + " ";
+                    query = query + String(compCol) + " " + String(comparator) + " '" + String(compVal) + "' " + String(radioVal) + " ";
                 } 
                 //otherwise (if you're at the last attribute field) don't append AND/OR
                 else {
-                    query = query + String(compCol) + " " + String(comparator) + " " + String(compVal) + " ";
+                    query = query + String(compCol) + " " + String(comparator) + " '" + String(compVal) + "' ";
                 }
             }
         }
@@ -118,7 +118,7 @@ $(document).on('click', '.submitQueryVisual', function () {
             var comparator = $("select#attr1-comparator option:checked").val();
             var compVal = $("input#t1-val").val();
             if ((comparator != null && comparator != "") || (compCol != null && compCol != "") || (compVal != null && compVal != "")) {
-                query = query + String(compCol) + " " + String(comparator) + " " + String(compVal);
+                query = query + String(compCol) + " " + String(comparator) + " '" + String(compVal) + "'";
             }
         }
     }
