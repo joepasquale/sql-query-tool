@@ -20,6 +20,7 @@ curTable = ""
 curColumns = []
 
 #get list of dbs for db page
+#safety: safe from injection, as the function will throw an exception if an sql statement is inserted
 #params: none
 #returns: a json object with the html string containing options for all databases in the server.
 def loadDBList():
@@ -27,7 +28,7 @@ def loadDBList():
     print("Received DB list load request")
     db = conn.cursor()
     #query for list of dbs
-    #can add something like "WHERE name LIKE "%naming convention%" if you want to limit which servers are visible
+    #add something like "WHERE name LIKE "%naming convention%" if you want to limit which servers are visible
     sqlLoadDBList = "SELECT name FROM master.sys.databases"
     db.execute(sqlLoadDBList)
     val = db.fetchall()
@@ -40,7 +41,8 @@ def loadDBList():
     print("Sending response with DBs")
     return json.dumps(dbListString)
 
-#change db for query tool
+#change db for query tool.
+#safety: safe from injection, as the function will throw an exception if an sql statement is inserted
 #param: name of database, username, and password for login
 #returns: nothing specifically but changes the instance of conn
 def newDB(dbName, user, pwd):
@@ -58,6 +60,7 @@ def newDB(dbName, user, pwd):
         return "INVALID CREDENTIAL"
 
 #used to find what table a query is searching
+#safety: unknown
 #param: query
 #returns: table from query
 def truncateQuery(query):
@@ -73,6 +76,7 @@ def truncateQuery(query):
     return curTable
 
 #used to load list of tables from current db for visual query tool
+#safety: safe from injection, does not take any input from the user.
 #param: none
 #returns: a json object with a string containing the html code for every table's name, where each name is in an <option> tag
 def loadTableList():
@@ -92,12 +96,16 @@ def loadTableList():
     return json.dumps(tableListString)
 
 #used to fetch a list of columns for the currently selected table in the visual query tool
+#safety: safe from injection, does not rely on user text input for feedback from the server. parameterized
 #param: a table
 #returns: a json object with a string containing the html code for every column's name, where each column is in an <option> tag
 def loadColumnList(table):
     db = conn.cursor()
-    print("Received column load request")
-    sqlLoadColumnList = "SELECT * FROM [" + str(table) + "]"
+    tablePar = str(table)
+    if(("INSERT" in tablePar) or ("DROP" in tablePar) or ("DELETE" in tablePar) or ("UPDATE" in tablePar) or ("ALTER" in tablePar) or ("CREATE" in tablePar)):
+        return json.dumps("<option>Nice Try!</option>")
+        
+    sqlLoadColumnList = "SELECT * FROM ["+tablePar+"]"
     db.execute(sqlLoadColumnList)
     columnList = [str(column[0]) for column in db.description]
     #put table list into html for dropdown menu
@@ -111,11 +119,16 @@ def loadColumnList(table):
 
 
 #create html for jinja based on query results
-#param: db, an object holding the result of a query
+#safety: safe at this level, explicit query checking
+#param: query, an object holding the result of a query
 #returns: a string with the html code for a table holding the results
 def buildResultTableHTML(query):
     global curData, curColumns
+    temp = str(query)
     print("Received request to build result table")
+    if(("INSERT" in temp) or ("DROP" in temp) or ("DELETE" in temp) or ("UPDATE" in temp) or ("ALTER" in temp) or ("CREATE" in temp)):
+        result = "<tr><td>Query denied - contains keywords that signal an SQL Injection</tr></tr>"
+        return json.dumps(result)
     #db cursor tool
     db = conn.cursor()
     #try/catch is in place to catch an exception from the db executing the query
@@ -147,6 +160,7 @@ def buildResultTableHTML(query):
     return json.dumps(result)
 
 #a function to export the currently viewed table to a csv file
+#safety: does not execute sql.
 #params: none explicitly, but it needs to be used after searching a table, or else the file will be empty
 #returns: a flask response containing the csv table
 def exportCSV():

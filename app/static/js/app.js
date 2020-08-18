@@ -40,7 +40,7 @@ $(document).on('click', '.fetchColumns', function () {
                 //html for attribute containers
                 additionalHTML = "<option value=''></option>" + html;
                 //html for selecting which attributes to view
-                viewHTML = "<option value='*'>ALL RECORDS</option><option value='TOP (100) *'>TOP 100 RECORDS</option>" + html;
+                viewHTML = "<option value='*'>ALL RECORDS</option><option value='TOP (100) *'>TOP 100 RECORDS</option><option value='COUNT(*)'>COUNT RECORDS</option>" + html;
                 $(".attr-select").html(additionalHTML);
                 $("#view-select").html(viewHTML);
             });

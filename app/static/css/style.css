@@ -6,8 +6,7 @@ table {
     background-color: beige;
     border: 2px black;
     color: white;
-    margin-left:auto;
-    margin-right:auto;
+    margin-top: 10px;
 }
 
 .tool-container{
@@ -28,6 +27,15 @@ table {
 }
 
 .query-output{
-    border: 3px gray;
+    border: 3px darkgray solid;
+    background-color: lightgray;
     border-radius: 10px;
+    margin-top: 30px;
+}
+
+.c {
+    margin-top:10px;
+    margin-bottom: 10px;
+    margin-left:auto;
+    margin-right: auto;
 }
