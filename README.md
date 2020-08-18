@@ -24,7 +24,7 @@ Query page
 ![Query Page](https://github.com/joepasquale/sql-query-tool/blob/master/app/static/img/sql-q-tool-1.PNG)
 
 Query page w/ results of SQL query
-![SQL Query](https://github.com/joepasquale/sql-query-tool/blob/master/app/static/img/sql-q-tool-3.PNG)
+![SQL Query](https://github.com/joepasquale/sql-query-tool/blob/master/app/static/img/sql-q-tool-6.PNG)
 
 Query page w/ results of visual query with no conditions
 ![No Condition](https://github.com/joepasquale/sql-query-tool/blob/master/app/static/img/sql-q-tool-2.PNG)
