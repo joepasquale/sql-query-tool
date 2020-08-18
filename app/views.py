@@ -4,8 +4,8 @@ from flask import json, redirect, render_template, url_for, request, make_respon
 curData = []
 curTable = ""
 curColumns = []
-tables = json.loads(dbAccess.loadTableList())
 dbList = json.loads(dbAccess.loadDBList())
+tables = json.loads(dbAccess.loadTableList())
 
 #landing page
 @app.route('/')
@@ -17,7 +17,9 @@ def dbSelect():
 def loadDb():
     global tables
     database = request.form["dbSelect"]
-    dbAccess.newDB(database)
+    user = request.form["db_uid"]
+    pwd = request.form["db_pwd"]
+    dbAccess.newDB(database, user, pwd)
     tables = json.loads(dbAccess.loadTableList())
     return redirect(url_for('query'), tables)
 

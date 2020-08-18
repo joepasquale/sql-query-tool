@@ -6,12 +6,25 @@
 
 <div class="container">
     <div class="row">
-        <div class="col tool-container text-center">
-            <h1>Select Database</h1>
+        <div class="form-group tool-container text-center">
             <form action='/loadDB' method='POST'>
-                <select class='form-control' id="dbSelect" name="dbSelect">
-                    {{dbListString|safe}}
-                </select>
+                <div class="col">
+                    <h1>Select Database</h1>
+                    <select class='form-control' id="dbSelect" name="dbSelect">
+                        {{dbListString|safe}}
+                    </select>
+                </div>
+                <br>
+                <div class="col">
+                    <div class="form-row">
+                        <label for="db_uid">Database UID: </label>
+                        <input class="form-control" type="text" id="db_uid" name="db_uid" placeholder="sqladmin">
+                    </div>
+                    <div class="form-row">
+                        <label for="db_pwd">Database PWD: </label>
+                        <input class="form-control" type="password" id="db_pwd" name="db_pwd" placeholder="password">
+                    </div>
+                </div>
                 <br>
                 <button class='btn btn-primary' type="submit">Load Database</button>
             </form>

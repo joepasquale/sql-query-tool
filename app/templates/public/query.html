@@ -32,18 +32,19 @@
     <div class="row query-tool">
         <div class="col">
             <h3 class="text-center">Build Query Below</h3>
-            <form method='POST'>
+            <form method="POST">
                 <div class="form-group" id="vtool">
                     <!-- Table Selector -->
                     <div>
                         <label>Select Source Table</label>
-                        <select class='form-control fetchColumns' id="table-select" name='table-select'>
+                        <select class="form-control fetchColumns" id="table-select" name="table-select">
                             {{ tableListString|safe}}
                         </select>
                     </div>
                     <div id="viewSelector">
                         <label>Choose columns to view</label>
-                        <select class='form-control' name='view-select' id='view-select'>
+                        <select class="form-control" name="view-select" id="view-select">
+                            <!-- Filled from JS -->
                         </select>
                     </div>
                     <div id="colSelector">
@@ -51,12 +52,13 @@
                         <div class="row" id="attrContainer1">
                             <!-- Column Selector -->
                             <div class="col">
-                                <select class='form-control attr-select' name='attr1-select' id='attr1-select'>
+                                <select class="form-control attr-select" name="attr1-select" id="attr1-select">
+                                    <!-- Filled from JS -->
                                 </select>
                             </div>
                             <!-- Comparator -->
                             <div class="col">
-                                <select class='form-control' name='attr1-comparator' id='attr1-comparator'>
+                                <select class="form-control" name="attr1-comparator" id="attr1-comparator">
                                     <option value=""></option>
                                     <option value=">">></option>
                                     <option value="<"><</option>
@@ -70,7 +72,7 @@
                             </div>
                             <!-- Value for comparison -->
                             <div class="col">
-                                <input class='form-control' type='text' name='t1-val' id='t1-val' placeholder="Value">
+                                <input class="form-control" type="text" name="t1-val" id="t1-val" placeholder="Value">
                             </div>
                         </div>
                         <br>
@@ -87,7 +89,7 @@
                     <div>
                         <label class="text-center">Sort By:</label>
                         <select class='form-control attr-select' id='sort-select' name='sort-select'>
-
+                            <!-- Filled from JS -->
                         </select>
                     </div>
                     <div class="text-center">
@@ -95,21 +97,23 @@
                         <button type="button" class="btn btn-primary center submitQueryVisual">Submit Query</button>
                     </div>
                 </div>
+                <div class="row" id="joined_table">
+
+                </div>
             </form>
         </div>
     </div>
 </div>
 <!-- Output -->
-<div class="container-lg tool-container">
+<div class="container-flex tool-container">
     <div class="query-output col center text-center">
         <div class="center text-center">
             <h4 class="text-center">Output</h4>
             <h2 class="text-center">{{ curTable }}</h2>
         </div>
         <div class="row text-center">
-            <a class="text-center" href="/query/download-csv" target="__blank"
-                style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to
-                    CSV</button></a>
+            <a class="text-center" href="/query/download-csv" target="__blank" style="margin-right:auto;margin-left:auto;"><button class="text-center btn btn-primary">Export to CSV</button></a>
+            <br>
         </div>
         <table id = "outputTbl" class="table table-striped table-dark query-output container">
             {{ resultString|safe }}

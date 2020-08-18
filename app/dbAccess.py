@@ -1,29 +1,38 @@
 from app import app
+#used to pass requests back to routes
 from flask import json, make_response
-import pyodbc
-import csv
+#used to write csv
 from io import StringIO
+import csv
+#used to connect to MSSQL DB
+import pyodbc
 
+#default db connection
 conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                       'SERVER=*;'
                       'DATABASE=*;'
                       'uid=*;'
                       'pwd=*;')
 
+#used to store data for csv
 curData = []
 curTable = ""
 curColumns = []
 
 #get list of dbs for db page
+#params: none
+#returns: a json object with the html string containing options for all databases in the server.
 def loadDBList():
     #create db query object
     print("Received DB list load request")
     db = conn.cursor()
+    #query for list of dbs
+    #can add something like "WHERE name LIKE "%naming convention%" if you want to limit which servers are visible
     sqlLoadDBList = "SELECT name FROM master.sys.databases"
     db.execute(sqlLoadDBList)
     val = db.fetchall()
     dbList = [x[0] for x in val]
-    #put table list into html for dropdown menu
+    #put db list into html for dropdown menu
     dbListString = ""
     for x in dbList:
         dbListString = dbListString + "<option value='" + x + "'>" + x + "</option>"
@@ -32,16 +41,24 @@ def loadDBList():
     return json.dumps(dbListString)
 
 #change db for query tool
-def newDB(dbName):
+#param: name of database, username, and password for login
+#returns: nothing specifically but changes the instance of conn
+def newDB(dbName, user, pwd):
     global conn
     conn.close()
-    conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
-                          'SERVER=*;'
-                          'DATABASE=' + str(dbName) + ';'
-                          'uid=*;'
-                          'pwd=*;')
-            
+    try:
+        conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
+                              'SERVER=*;'
+                              'DATABASE=' + str(dbName) + ';'
+                              'uid=' + str(user) + ';'
+                              'pwd=' + str(pwd) + ';')
 
+    except:
+        return "INVALID CREDENTIAL"
+
+#used to find what table a query is searching
+#param: query
+#returns: table from query
 def truncateQuery(query):
     global curTable
     curTable = query
@@ -57,8 +74,6 @@ def truncateQuery(query):
 #used to load list of tables from current db for visual query tool
 #param: none
 #returns: a json object with a string containing the html code for every table's name, where each name is in an <option> tag
-
-
 def loadTableList():
     #create db query object
     print("Received table list load request")
@@ -78,8 +93,6 @@ def loadTableList():
 #used to fetch a list of columns for the currently selected table in the visual query tool
 #param: a table
 #returns: a json object with a string containing the html code for every column's name, where each column is in an <option> tag
-
-
 def loadColumnList(table):
     db = conn.cursor()
     print("Received column load request")
@@ -104,10 +117,10 @@ def buildResultTableHTML(query):
     print("Received request to build result table")
     #db cursor tool
     db = conn.cursor()
+    #try/catch is in place to catch an exception from the db executing the query
     try:
         result = ""
         db.execute(query)
-        print(query)
         data = db.fetchall()
         curData = data
         #get column names
@@ -135,8 +148,6 @@ def buildResultTableHTML(query):
 #a function to export the currently viewed table to a csv file
 #params: none explicitly, but it needs to be used after searching a table, or else the file will be empty
 #returns: a flask response containing the csv table
-
-
 def exportCSV():
     print("Request received to export CSV of results")
     si = StringIO()
