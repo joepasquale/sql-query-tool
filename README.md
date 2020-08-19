@@ -37,7 +37,3 @@ Query page w/ results of visual query with one condition
 
 Query page w/ results of visual query with multiple conditions and sort
 ![Multiple Conditions](https://github.com/joepasquale/sql-query-tool/blob/master/app/static/img/sql-q-tool-5.PNG)
-
-
-## Use Notice & Agreement
-This is open source software. I choose to publish this tool for my own personal use, and at no cost to users. I have no problem with any users modifying the source code for their own use; however, the work published in this repository is my intellectual property, and should not be claimed otherwise. I am not liable for any loss that is incurred in any fashion as a result of using this tool. As always, please be responsible when handling sensitive and/or valuable data.
