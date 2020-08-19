@@ -51,10 +51,6 @@ def loadDBList():
 #returns: nothing specifically but changes the instance of conn
 def newDB(dbName, user, pwd):
     global userConn
-    #close existing db connection
-    if(userConn != ""):
-        userConn.close()
-
     try:
         userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                                   'SERVER=*;'
