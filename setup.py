@@ -4,6 +4,6 @@ setup(
     name='SQL Query Tool',
     version='1.0.0',
     packages=['app',],
-    license='Creative Commons Attribution-Noncommercial-Share Alike license',
+    license='MIT License',
     author='Joe Pasquale'
 )
