@@ -56,7 +56,7 @@ def newDB(dbName, user, pwd):
         
     try:
         userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
-                                  'SERVER=tech-web;'
+                                  'SERVER=*;'
                                   'DATABASE=' + str(dbName) + ';'
                                   'uid=' + str(user) + ';'
                                   'pwd=' + str(pwd) + ';')
