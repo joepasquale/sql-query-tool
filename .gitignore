@@ -9,8 +9,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-venv/
 build/
+dist/
 develop-eggs/
 dist/
 downloads/
@@ -85,6 +85,9 @@ ipython_config.py
 
 # pyenv
 .python-version
+
+#Visual Studio
+.vscode/
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
