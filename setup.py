@@ -5,5 +5,6 @@ setup(
     version='1.0.0',
     packages=['app',],
     license='MIT License',
-    author='Joe Pasquale'
+    author='Joe Pasquale',
+    install_requires = ['pyodbc','flask','waitress']
 )
