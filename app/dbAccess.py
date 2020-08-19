@@ -21,13 +21,14 @@ curColumns = []
 #returns: a json object with the html string containing options for all databases in the server.
 def loadDBList():
     #connect to db to fetch master list
-    global conn
+    global conn, userConn
     conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                       'SERVER=*;'
                       'DATABASE=*;'
                       'uid=*;'
                       'pwd=*;')
     #create db query object
+    userConn = conn
     print("Received DB list load request")
     db = conn.cursor()
     #query for list of dbs
@@ -53,7 +54,7 @@ def newDB(dbName, user, pwd):
     #close existing db connection
     if(userConn != ""):
         userConn.close()
-        
+
     try:
         userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                                   'SERVER=*;'
@@ -91,7 +92,7 @@ def injectionAlert(tableString):
 def loadTableList():
     #create db query object
     print("Received table list load request")
-    db = conn.cursor()
+    db = userConn.cursor()
     #execute query that fetches all tables from db
     sqlLoadTableList = "SELECT Distinct TABLE_NAME FROM information_schema.TABLES"
     db.execute(sqlLoadTableList)
@@ -110,7 +111,7 @@ def loadTableList():
 #param: a table
 #returns: a json object with a string containing the html code for every column's name, where each column is in an <option> tag
 def loadColumnList(table):
-    db = conn.cursor()
+    db = userConn.cursor()
     tablePar = str(table)
     #sql injection protection
     if(injectionAlert(tablePar) or ("SELECT" in table)):
@@ -140,7 +141,7 @@ def buildResultTableHTML(query):
         result = "<tr><td>Query denied - contains keywords that signal an SQL Injection</tr></tr>"
         return json.dumps(result)
     #db cursor tool
-    db = conn.cursor()
+    db = userConn.cursor()
     #try/catch is in place to catch an exception from the db executing the query
     try:
         result = ""
