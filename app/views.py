@@ -19,9 +19,12 @@ def loadDb():
     database = request.form["dbSelect"]
     user = request.form["db_uid"]
     pwd = request.form["db_pwd"]
-    dbAccess.newDB(database, user, pwd)
-    tables = json.loads(dbAccess.loadTableList())
-    return redirect(url_for('query'), tables)
+    if(dbAccess.newDB(database, user, pwd)):
+        tables = json.loads(dbAccess.loadTableList())
+        return redirect(url_for('query'), tables)
+    
+    else:
+        return redirect(url_for('dbSelect'))
 
 #index
 @app.route('/query')

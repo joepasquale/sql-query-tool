@@ -4,7 +4,7 @@ In order to run this application on your machine, you need to install Flask and 
 
 Once you have the virtual environment set up, make sure that you run `pip install flask` and `pip install pyodbc`. These are the required package installs for Flask (the web server framework) and its dependents and pyodbc (a python package used to access MSSQL servers).
 
-Afterwards, configure your server credentials in the dbAccess.py file. The fields that need to be replaced come with `*` in place of the server, database, username, and password. After these have been saved in the file, you'll be good to go! 
+Afterwards, configure your server credentials in the dbAccess.py file, under the loadDB() function, as well as the newDB() function. I chose the sqladmin account for the account that the connection uses, as the tool is read-only, and calls are serialized, so concurrency is not an issue. The fields that need to be replaced come with `*` in place of the server, database, username, and password. After these have been saved in the file, you'll be good to go! 
 
 If you continue getting errors at this point, you may have put in an invalid server credential, but can otherwise try switching the OBDC driver. You can find which drivers you have installed by running a python file within the virtual environment that shows the value of `pyodbc.drivers()`.
 

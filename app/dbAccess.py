@@ -50,16 +50,26 @@ def loadDBList():
 #param: name of database, username, and password for login
 #returns: nothing specifically but changes the instance of conn
 def newDB(dbName, user, pwd):
-    global userConn
-    try:
-        userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
+    global conn, userConn
+    #connect to server holding user records
+    conn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                                   'SERVER=*;'
-                                  'DATABASE=' + str(dbName) + ';'
-                                  'uid=' + str(user) + ';'
-                                  'pwd=' + str(pwd) + ';')
+                                  'DATABASE=myLoginDB;'
+                                  'uid=*;'
+                                  'pwd=*;')
+    db = conn.cursor()
+    #prepared statement for uname and pwd
+    db.execute("SELECT COUNT(*) from [userRecords] WHERE userID = ? AND password = ?",[user, pwd])
+    ct = db.fetchone()
+    if(ct[0] == 1):
+        userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
+                                      'SERVER=*;'
+                                      'DATABASE=' + str(dbName) + ';'
+                                      'uid=*;'
+                                      'pwd=*;')
+        return True
 
-    except:
-        return "INVALID CREDENTIAL"
+    return False
 
 #used to check for keywords that indicate actions of an sql injection. there's no need for any of these keywords, as the tool is intended to be read-only
 #param: a string containing a query or table
