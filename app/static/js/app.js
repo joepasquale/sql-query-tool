@@ -24,12 +24,23 @@ $(document).on('click', '.removeService', function () {
     }
 });
 
+//clear attribute fields
+$(document).on('click', '.clearFields', function () {
+    console.log("Received event");
+    $(this).closest('form').find("input[type=text], textarea").val("");
+    $(this).closest('form').find("input[type=select], select").val("");
+});
+
 //fetch columns on click
 $(document).on('click', '.fetchColumns', function () {
     console.log("Browser received column fetch event");
     //fetch table name
     var selectedTable = $("select#table-select option:checked").val();
     selectedTable = selectedTable.toString();
+    if(selectedTable == ""){
+        console.log("No table selected");
+        return;
+    }
     console.log("Sending table selection to server: " + selectedTable.toString());
     $(function () {
         //post request to /querys/cols for dbAccess to handle
@@ -100,7 +111,7 @@ $(document).on('click', '.submitQueryVisual', function () {
                 //if there are more attribute fields, append the AND/OR statement
                 if (i != x) {
                     query = query + String(compCol) + " " + String(comparator) + " '" + String(compVal) + "' " + String(radioVal) + " ";
-                } 
+                }
                 //otherwise (if you're at the last attribute field) don't append AND/OR
                 else {
                     query = query + String(compCol) + " " + String(comparator) + " '" + String(compVal) + "' ";

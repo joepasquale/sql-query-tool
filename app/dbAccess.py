@@ -51,7 +51,9 @@ def loadDBList():
 def newDB(dbName, user, pwd):
     global userConn
     #close existing db connection
-    userConn.close()
+    if(userConn != ""):
+        userConn.close()
+        
     try:
         userConn = pyodbc.connect('DRIVER={SQL Server Native Client 11.0};'
                                   'SERVER=tech-web;'

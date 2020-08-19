@@ -49,6 +49,7 @@
                     <div>
                         <label>Select Source Table</label>
                         <select class="form-control fetchColumns" id="table-select" name="table-select">
+                            <option value=""></option>
                             {{ tableListString|safe}}
                         </select>
                     </div>
@@ -88,7 +89,10 @@
                         </div>
                         <br>
                         <!-- Add additional attribute filter -->
-                        <div id="extraAttributes" style="margin-bottom:5px;">
+                        <div style="margin-bottom:10px;">
+                            <button type="button" class="btn btn-primary clearFields">Clear attribute fields</button>
+                        </div>
+                        <div id="extraAttributes"  style="margin-bottom:5px;">
                             <label class="text-center">Add additional constraint(s)</label>
                             <br>
                             <button type="button" class="btn btn-primary addService fetchColumns">+</button>
