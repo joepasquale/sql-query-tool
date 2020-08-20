@@ -1,5 +1,5 @@
 from app import app, dbAccess
-from flask import json, redirect, render_template, url_for, request, make_response
+from flask import json, redirect, render_template, url_for, request, make_response, flash, get_flashed_messages
 
 curData = []
 curTable = ""
@@ -24,6 +24,7 @@ def loadDb():
         return redirect(url_for('query'), tables)
     
     else:
+        flash("Incorrect Login",category='login')
         return redirect(url_for('dbSelect'))
 
 #index

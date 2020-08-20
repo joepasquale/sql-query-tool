@@ -9,6 +9,12 @@ table {
     margin-top: 10px;
 }
 
+#errorMessage { 
+    background-color: lightcoral;
+    border: 4px red solid;
+    border-radius: 5px;
+}
+
 .tool-container{
     border: 3px darkgray solid;
     background-color: lightgray;

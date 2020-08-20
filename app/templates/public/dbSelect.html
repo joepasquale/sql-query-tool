@@ -7,6 +7,13 @@
 <div class="container">
     <div class="row">
         <div class="form-group tool-container text-center">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p id = "errorMessage">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <form action='/loadDB' method='POST'>
                 <div class="col">
                     <h1>Select Database</h1>
